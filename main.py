@@ -21,7 +21,7 @@ class Item(BaseModel):
 
 @app.get('/')
 async def root():
-    return {'message': 'Visited links server. Version 0.0.1'}
+    return {'message': 'Visited links server. Version 1.0.0', "status": "ok"}
 
 @app.post('/visited_links')
 async def create_item(item: Item):
