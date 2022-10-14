@@ -1,5 +1,5 @@
 import os
-import datetime
+import time
 from typing import List
 from fastapi import FastAPI
 from dotenv import load_dotenv
@@ -24,6 +24,6 @@ async def root():
 @app.post('/visited_links')
 async def create_item(item: Item):
     linksList = {"links" : item.links,
-        "date": datetime.datetime.utcnow()}
+        "timestamp": time.time_ns()}
     links.insert_one(linksList).inserted_id
     return {"status": "ok"}
