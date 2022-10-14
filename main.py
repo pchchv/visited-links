@@ -1,4 +1,6 @@
+from datetime import datetime
 import os
+from sqlite3 import Timestamp
 import time
 from typing import List
 from fastapi import FastAPI
@@ -24,6 +26,20 @@ async def root():
 @app.post('/visited_links')
 async def create_item(item: Item):
     linksList = {"links" : item.links,
-        "timestamp": time.time_ns()}
+        "timestamps": time.time_ns()}
     links.insert_one(linksList).inserted_id
     return {"status": "ok"}
+
+@app.get('/visited_domains')
+async def read_item(fromTime: int, toTime: int):
+    res = []
+    for link in links.find():
+        if fromTime < link['timestamps'] < toTime:
+            for l in link['links']:
+                if '?' in l:
+                    l = l.split('?')[0]
+                else:
+                    ll = l.split('/')
+                    l = ll[0] + "//" + ll[2]
+                res.append(l)
+    return {"domains": set(res), "status": "ok"}
